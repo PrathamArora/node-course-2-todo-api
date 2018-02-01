@@ -10,6 +10,8 @@ MongoClient.connect('mongodb://localhost:27017' , (err , client) => {
   if( err ){
     return console.log('Unable to connect to ModngoDB server');
   }
+
+  
   console.log('Connected to MongoDB server');
 
   // client.db(dbName).collection('Todos').findOneAndUpdate({
