@@ -10,6 +10,7 @@ const {mongoose} = require('./db/mongoose.js');
 const {ObjectID} = require('mongodb');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
+var {authenticate} = require('./middleware/authenticate.js');
 
 
 // var newTodo = new Todo({
@@ -141,6 +142,10 @@ app.patch('/todos/:id' , (req , res) => {
   });
 });
 
+
+app.get('/users/me' , authenticate , (req , res) =>{
+  res.send(req.user);
+});
 
 
 
