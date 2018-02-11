@@ -4,6 +4,7 @@ require('./config/config.js');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
 
 
 const {mongoose} = require('./db/mongoose.js');
@@ -57,6 +58,28 @@ app.post('/users' , (req , res) => {
   });
 
 });
+
+app.post('/users/login' , (req , res) => {
+  var body = _.pick(req.body , ['email' , 'password']);
+  // User.findOne({email : body.email} , (err , user) => {
+  //   bcrypt.compare(body.password , user.password , (err , resbcrypt) => {
+  //     if(resbcrypt){
+  //       res.status(200).header('x-auth' , user.tokens[0].token).send({email : body.email , password : body.password });
+  //     }else{
+  //       res.status(400).send();
+  //     }
+  //   });
+  // });
+
+  User.findByCredentials(body.email , body.password).then( (user) => {
+    user.generateAuthToken().then((token) => {
+      res.header('x-auth' , token).send(user);
+    });
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 
 app.post('/todos' , (req , res) =>{
   var todo = new Todo({
